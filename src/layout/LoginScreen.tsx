@@ -2,24 +2,37 @@ import { useState } from "react";
 import { View, Text,TextInput,StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { useEffect } from "react";
 import { useNavigation } from "expo-router";
+import RegisterScreen from "./RegisterScreeen";
 
 export default function LoginScreen(){
   //const [email, setEmail]= useState(); 
   const navigation = useNavigation();
+  const [showRegister, setShowRegister] = useState(false);
+  
   useEffect(()=>{
-    navigation.setOptions({headersShown: false});
+    navigation.setOptions({headerShown: false});
   }, [navigation]);
+  if(showRegister){
+    return<RegisterScreen onClose={()=>setShowRegister(false)}/>
+  }
     return (
         <View style={styles.container}>
           <Text style={styles.title}>Sing in</Text>
+
           <Text>Email</Text>
           <TextInput style= {styles.input}       
           placeholder="Usuario@gmail.com"></TextInput>
+
           <Text>Password</Text>
           <TextInput style= {styles.input}
           placeholder="***************" secureTextEntry></TextInput>
+
           <TouchableOpacity style ={styles.button}>
            <Text style= {styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={()=> setShowRegister(true)}>
+           <Text style= {styles.link}>Sign up</Text>
           </TouchableOpacity>
         </View>
       );
@@ -51,13 +64,18 @@ const styles=StyleSheet.create({
     backgroundColor: "#007bff",
     padding: 10,
     borderRadius: 5,
-    width: "20%"
+    width: "65%",
+    alignItems:"center"
   },
   buttonText:{
     color: "white",
     fontSize: 18,
-    fontWeight: "bold"
     
+  },
+  link:{
+    marginTop:10,
+    color: "blue",
+    textDecorationLine:"underline"
   }
 
 })
