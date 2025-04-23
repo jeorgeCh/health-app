@@ -1,77 +1,78 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native"
-import { supabase } from "../supabaseClient"
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { supabase } from "../supabaseClient";
 
-export default function RegisterScreeen({ onClose }: any) {
+export default function RegisterScreen({ onClose }: any) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [fullname, setFullname] = useState("");
-    const [mobilephone, setMobilephone] = useState("");
+    const [fullname, setFullName] = useState("");
+    const [mobilephone, setMobilePhone] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrormessage] = useState("");
-
+    const [errorMessage, setErrorMessage] = useState("");
+    
     const handleRegister = async () => {
         setLoading(true);
-        setErrormessage("");
-         
-        const{data, error}= await supabase.auth.signUp({
-            email,password
+        setErrorMessage("");
+
+        const { data, error } = await supabase.auth.signUp({
+            email, 
+            password
         });
-        if(error){
-            setErrormessage(error.message);
+
+        if(error) {
+            setErrorMessage(error.message);
             setLoading(false);
             return;
         }
-    //Insert data into SUPABASE 
-    const { error: InsertError } = await supabase.from("users").insert([
-        {
-            email: email,
-            password: password,
-            fullname: fullname,
-            mobile_phone: mobilephone
-        }
-    ])
-    if (InsertError){
-        setErrormessage(InsertError.message);
+
+        //Insert data into Supabase table
+        const { error: InsertError } = await supabase.from("users").insert([
+            { 
+                email: email, 
+                password: password,
+                fullname: fullname,
+                mobile_phone: mobilephone
+            }
+        ]);
+
         setLoading(false);
-        
-    }else{
-        alert("User has been created")
-        onClose();
+        if (InsertError) {
+            setErrorMessage(InsertError.message);
+        } else {
+            alert("User has been created successfully");
+            onClose();
+        }
     }
-    }
-    
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}> Sing up</Text>
-
+            <Text style={styles.title}>Sign up</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Usuario@gmail.com"></TextInput>
-
-            <TextInput style={styles.input}
-                placeholder="***************" secureTextEntry></TextInput>
-
-
-            <TextInput style={styles.input}
-                placeholder="Your fullname" secureTextEntry></TextInput>
-
-
-            <TextInput style={styles.input}
-                placeholder="(+57) 000000" secureTextEntry></TextInput>
-
+                placeholder="admin@mail.com"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="*********"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Your fullname"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="(+57) 000000000"
+            />
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
-
             <TouchableOpacity onPress={onClose}>
-                <Text style={styles.link}>Login</Text>
+                <Text style={styles.link}>Back to login</Text>
             </TouchableOpacity>
-
-
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -85,10 +86,10 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     input: {
-        width: "65%",
+        width: "80%",
         padding: 10,
         marginVertical: 10,
-        backgroundColor: "while",
+        backgroundColor: "white",
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ccc"
@@ -98,18 +99,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#007bff",
         padding: 10,
         borderRadius: 5,
-        width: "65%",
+        width: "80%",
         alignItems: "center"
     },
     buttonText: {
         color: "white",
-        fontSize: 18,
-
+        fontSize: 14,
+        fontWeight: "bold"
     },
     link: {
         marginTop: 10,
         color: "blue",
         textDecorationLine: "underline"
-    }
-
-})
+    },
+});
